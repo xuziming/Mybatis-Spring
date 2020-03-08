@@ -27,7 +27,7 @@
 	</select>
 
 	<select id="selectAllByPage" resultMap="BaseResultMap">
-		select id, countryname, countrycode from country where id > 1000
+		select id, countryname, countrycode from country
 	</select>
 
 </mapper>
