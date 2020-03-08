@@ -32,13 +32,17 @@ public class PageQueryHelper {
 
 		// 执行实际查询(返回com.github.pagehelper.Page对象)
 		List<T> result = querier.query();
-		System.out.println(result.getClass().getName());
 
 		// 获取分页数据
 		PageInfo<T> pageInfo = new PageInfo<T>(result);
 
 		// 转换为目标分页对象
-		return transferPageInfoToPagination(pageInfo);
+		Pagination<T> pagination = transferPageInfoToPagination(pageInfo);
+
+		// 清除分页信息(其实无需clear, PageInterceptor会在finally调用clearPage())
+		// PageHelper.clearPage();// TODO === 注意分页信息的生命周期或者说作用域
+
+		return pagination;
 	}
 
 	/**
