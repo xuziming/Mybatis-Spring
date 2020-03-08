@@ -21,8 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-package com.isea533.mybatis.test;
+package com.isea533.mybatis.test.page;
 
 import java.util.List;
 
@@ -30,37 +29,31 @@ import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.isea533.mybatis.mapper.CountryMapper;
 import com.isea533.mybatis.model.Country;
+import com.isea533.mybatis.test.BasicTest;
+import com.isea533.mybatis.test.PageQueryHelper;
+import com.isea533.mybatis.test.PageQueryHelper.NoPageQuerier;
+import com.isea533.mybatis.test.Pagination;
 
-import tk.mybatis.mapper.entity.Example;
-
-/**
- * Created by liuzh on 2015/3/7.
- */
-public class PageMapperTest extends BasicTest {
-
-//    @Autowired
-//    private CountryMapper countryMapper;
+public class PageQueryTest extends BasicTest {
 
 	@Autowired
 	private SqlSession sqlSession;
 
 	@Test
-	public void test() {
-		CountryMapper countryMapper = sqlSession.getMapper(CountryMapper.class);
-		Example example = new Example(Country.class);
-		example.createCriteria().andGreaterThan("id", 100);
-		PageHelper.startPage(2, 10);
-		List<Country> countries = countryMapper.selectByExample(example);
-		PageInfo<Country> pageInfo = new PageInfo<Country>(countries);
-		System.out.println(pageInfo.getTotal());
+	public void testPageQuery() {
+		final CountryMapper countryMapper = sqlSession.getMapper(CountryMapper.class);
 
-		countries = countryMapper.selectByExample(example);
-		pageInfo = new PageInfo<Country>(countries);
-		System.out.println(pageInfo.getTotal());
+		Pagination<Country> page = PageQueryHelper.doPageQuery(3, 10, new NoPageQuerier<Country>() {
+			@Override
+			public List<Country> query() {
+				return countryMapper.selectAllByPage();
+			}
+		});
+
+		System.out.println(page.getTotal());
+		System.out.println(page.getList().size());
 	}
 
 }
