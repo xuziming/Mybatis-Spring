@@ -30,11 +30,11 @@ public class PageQueryHelper {
 		// 设置分页信息
 		PageHelper.startPage(pageNum, pageSize);
 
-		// 执行实际查询(返回com.github.pagehelper.Page对象)
+		// 执行实际查询(实际返回com.github.pagehelper.Page对象)
 		List<T> result = querier.query();
 
 		// 获取分页数据
-		PageInfo<T> pageInfo = new PageInfo<T>(result);
+		PageInfo<T> pageInfo = PageInfo.of(result);
 
 		// 转换为目标分页对象
 		Pagination<T> pagination = transferPageInfoToPagination(pageInfo);
